@@ -6,7 +6,11 @@
 
 const router = require("express").Router();
 const controller = require("./reservations.controller");
+//methodNotAllowed
 
-router.route("/").get(controller.list);
+router
+    .route("/")
+    .get(controller.list)
+    .post(controller.create)
 
 module.exports = router;
