@@ -349,6 +349,7 @@ describe("US-01 - Create and list reservations", () => {
         .send({ data });
 
       expect(response.body.error).toBeUndefined();
+
       expect(response.body.data).toEqual(
         expect.objectContaining({
           first_name: "first",

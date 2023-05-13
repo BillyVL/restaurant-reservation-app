@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router"
+import { useHistory } from "react-router";
 import CreateReservationForm from "./CreateReservationForm";
 import { createReservation } from "../../utils/api";
 
 function CreateReservation() {
-
   const [error, setError] = useState({});
   const [reservation, setReservation] = useState({
     first_name: "",
@@ -26,33 +25,47 @@ function CreateReservation() {
     "updated_at": "2020-12-10T08:30:32.326Z"
   }, */
 
-  const history = useHistory()
+  const history = useHistory();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     console.log("You clicked Submit");
     event.preventDefault();
-    const abortController = new AbortController()
+    const abortController = new AbortController();
     reservation.people = Number(reservation.people);
-    createReservation(reservation, abortController.signal)
-      .then(data => {console.log(data)})
-      .catch(setError)  
+    reservation.reservation_date = new Date(reservation.reservation_date);
+    reservation.reservation_time = new Date(reservation.reservation_time);
+
+    console.log(reservation);
+
+    try {
+      await createReservation(reservation, abortController.signal)
+        .then((data) => {
+          console.log(data);
+
+          history.push(`/dashboard?date=${data.reservation_date}`)
+        })
+        .catch(setError);
+    } catch (error) {
+      console.log("error here: ", error);
+    }
+
     //abortController
     //API call
     //history will need createReservation API to get reservation data
-    history.push(`/dashboard?date=${reservation.reservation_date}`)
   };
 
   //if (error){return <h1>Error</h1>}
 
-  return(
+  return (
     <div>
       <form onSubmit={handleSubmit}>
-        <CreateReservationForm reservation = {reservation} setReservation = {setReservation}/>
+        <CreateReservationForm
+          reservation={reservation}
+          setReservation={setReservation}
+        />
       </form>
     </div>
-
-  )
-
+  );
 }
 
 export default CreateReservation;

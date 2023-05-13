@@ -1,94 +1,98 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 
-function CreateReservationForm({reservation, setReservation}){
-    const history = useHistory()
+function CreateReservationForm({ reservation, setReservation }) {
+  const history = useHistory();
 
-    const handleChange = ({ target }) => {
-      setReservation({
-        ...reservation,
-        [target.name]: target.value,
-      });
-      console.log("target ", target, "reservation ", reservation);
-    };
+  const handleChange = ({ target }) => {
+    setReservation({
+      ...reservation,
+      [target.name]: target.value,
+    });
+    console.log("target ", target, "reservation ", reservation);
+  };
 
-    function handleCancel(){
-      history.goBack()
-    }
-  
-    return (
+  function handleCancel() {
+    history.goBack();
+  }
+
+  return (
+    <div>
+      <h1>Create Reservation</h1>
       <div>
-        <h1>Create Reservation</h1>
-          <div>
-            <label>First Name</label>
-            <input
-              name="first_name"
-              value={reservation.first_name}
-              placeholder="first name"
-              require="true"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Last Name</label>
-            <input
-              name="last_name"
-              value={reservation.last_name}
-              placeholder="last name"
-              require="true"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Mobile Number</label>
-            <input
-              name="mobile_number"
-              value={reservation.mobile_number}
-              placeholder="###-###-####"
-              require="true"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Reservation Date</label>
-            <input
-              name="reservation_date"
-              value={reservation.reservation_date}
-              placeholder="reservation date"
-              require="true"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Reservation Time</label>
-            <input
-              name="reservation_time"
-              value={reservation.reservation_time}
-              placeholder="reservation time"
-              require="true"
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>People</label>
-            <input
-              name="people"
-              value={reservation.people}
-              placeholder="number of people"
-              require="true"
-              onChange={handleChange}
-              type="number"
-            />
-          </div>
-  
-          <button className="cancel-btn" type="cancel" onClick={handleCancel}>
-            Cancel
-          </button>
-          <button className="submit-btn" type="submit">
-            Submit
-          </button>
+        <label>First Name</label>
+        <input
+          name="first_name"
+          value={reservation.first_name}
+          placeholder="first name"
+          require="true"
+          onChange={handleChange}
+        />
       </div>
-    );
+      <div>
+        <label>Last Name</label>
+        <input
+          name="last_name"
+          value={reservation.last_name}
+          placeholder="last name"
+          require="true"
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <label>Mobile Number</label>
+        <input
+          name="mobile_number"
+          type="tel"
+          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+          value={reservation.mobile_number}
+          placeholder="###-###-####"
+          require="true"
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <label>Reservation Date</label>
+        <input
+          name="reservation_date"
+          type="date"
+          value={reservation.reservation_date}
+          placeholder="reservation date"
+          require="true"
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <label>Reservation Time</label>
+        <input
+          name="reservation_time"
+          type="time"
+          value={reservation.reservation_time}
+          placeholder="reservation time"
+          require="true"
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <label>People</label>
+        <input
+          name="people"
+          value={reservation.people}
+          placeholder="number of people"
+          require="true"
+          onChange={handleChange}
+          type="number"
+        />
+      </div>
+
+      <button className="cancel-btn" type="cancel" onClick={handleCancel}>
+        Cancel
+      </button>
+      <button className="submit-btn" type="submit">
+        Submit
+      </button>
+    </div>
+  );
 }
 
-export default CreateReservationForm
+export default CreateReservationForm;
