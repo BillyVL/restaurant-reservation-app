@@ -1,19 +1,5 @@
-const service = require("./reservations.services");
-
-/**
- * List handler for reservation resources
- */
-async function list(req, res) {
-  const { date } = req.query;
-
-  if (date) {
-    const data = await service.listForDate(date);
-    res.json({ data });
-  }
-
-  const data = await service.list();
-  res.json({ data });
-}
+const service = require("./reservations.services")
+const asyncErrorBoundary = require('../errors/asyncErrorBoundary')
 
 function hasData(req, res, next) {
   if (req.body.data) {
@@ -75,6 +61,23 @@ function hasReservationPeople(req, res, next) {
   next({ status: 400, message: "people are required." });
 }
 
+/**
+ * List handler for reservation resources
+ */
+async function list(req, res) {
+  const { date } = req.query;
+
+  if (date) {
+    const data = await service.listForDate(date);
+    res.json({ data });
+  }
+  else{
+
+  const data = await service.list();
+  res.json({ data });
+  }
+}
+
 async function create(req, res) {
   // req.body.data
   // call the service create function
@@ -85,7 +88,7 @@ async function create(req, res) {
 }
 
 module.exports = {
-  list,
+  list: asyncErrorBoundary(list),
   create: [
     hasData,
     hasFirstName,
@@ -93,7 +96,9 @@ module.exports = {
     hasMobileNumber,
     hasReservationDate,
     hasReservationTime,
+    isValidTimeString,
     hasReservationPeople,
+    asyncErrorBoundary(create)
   ],
 };
 

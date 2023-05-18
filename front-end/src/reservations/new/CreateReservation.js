@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import CreateReservationForm from "./CreateReservationForm";
 import { createReservation } from "../../utils/api";
+import ErrorAlert from "../../layout/ErrorAlert";
 
 function CreateReservation() {
-  const [error, setError] = useState({});
+  const [error, setError] = useState(null);
   const [reservation, setReservation] = useState({
     first_name: "",
     last_name: "",
@@ -37,28 +38,24 @@ function CreateReservation() {
 
     console.log(reservation);
 
-    try {
-      await createReservation(reservation, abortController.signal)
+    createReservation(reservation, abortController.signal)
         .then((data) => {
           console.log(data);
 
           history.push(`/dashboard?date=${data.reservation_date}`)
         })
         .catch(setError);
-    } catch (error) {
-      console.log("error here: ", error);
-    }
+      return () => abortController.abort();
 
     //abortController
     //API call
     //history will need createReservation API to get reservation data
   };
 
-  //if (error){return <h1>Error</h1>}
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
+        <ErrorAlert error = {error}/>
         <CreateReservationForm
           reservation={reservation}
           setReservation={setReservation}
