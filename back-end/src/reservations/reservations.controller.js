@@ -42,8 +42,10 @@ function hasReservationTime(req, res, next) {
   let reservationTime = req.body.data.reservation_time;
 
   if (reservationTime && isValidTimeString(reservationTime)) {
+    console.log("good", reservationTime)
     return next();
   }
+
   next({ status: 400, message: "reservation_time is required." });
 }
 
@@ -53,6 +55,7 @@ function isValidTimeString(timeString) {
 }
 
 function hasReservationPeople(req, res, next) {
+  console.log("people function was hit")
   let people = req.body.data.people;
   if (people && people > 0 && typeof people === "number") {
     return next();
@@ -79,11 +82,12 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
+  console.log(req, res);
   // req.body.data
   // call the service create function
   const reservation = req.body.data;
   const data = await service.create(reservation);
-
+  console.log(data);
   res.status(201).json({ data });
 }
 
@@ -96,7 +100,6 @@ module.exports = {
     hasMobileNumber,
     hasReservationDate,
     hasReservationTime,
-    isValidTimeString,
     hasReservationPeople,
     asyncErrorBoundary(create)
   ],

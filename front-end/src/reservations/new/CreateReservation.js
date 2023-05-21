@@ -33,10 +33,10 @@ function CreateReservation() {
     event.preventDefault();
     const abortController = new AbortController();
     reservation.people = Number(reservation.people);
+    console.log(reservation.reservation_date);
     reservation.reservation_date = new Date(reservation.reservation_date);
-    reservation.reservation_time = new Date(reservation.reservation_time);
-
-    console.log(reservation);
+/*     console.log(reservation.reservation_time);
+    reservation.reservation_time = new Date(reservation.reservation_time); */
 
     createReservation(reservation, abortController.signal)
         .then((data) => {
