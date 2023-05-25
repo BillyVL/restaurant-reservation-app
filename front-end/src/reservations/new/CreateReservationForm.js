@@ -9,7 +9,6 @@ function CreateReservationForm({ reservation, setReservation }) {
       ...reservation,
       [target.name]: target.value,
     });
-    console.log("target ", target, "reservation ", reservation);
   };
 
   function handleCancel() {

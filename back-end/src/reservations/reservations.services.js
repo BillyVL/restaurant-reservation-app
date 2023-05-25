@@ -6,6 +6,7 @@ function list(){
 }
 
 function listForDate(date){
+    console.log(date);
     return knex("reservations")
         .select("*")
         .where({reservation_date: date})
