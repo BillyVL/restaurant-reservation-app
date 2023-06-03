@@ -62,21 +62,56 @@ function hasReservationPeople(req, res, next) {
   next({ status: 400, message: "people are required." });
 }
 
-/**
- * List handler for reservation resources
- */
+function isReservationTuesday(req, res, next){
+  const date = req.body.data.reservation_date
+  //console.log(date)
+  const day = new Date(date).getUTCDay()
+  if (day !== 2){
+    return next()
+  }
+  next({
+    status: 400, message: "Reservations cannot be made, restaurant is closed on Tuesday."
+  })
+}
+
+function isReservationPast(req, res, next){
+  const { reservation_date, reservation_time } = req.body.data
+  const currentTime = Date.now()
+  const cleaned_reservation_date = new Date(reservation_date).toISOString().split('T')[0]
+
+  const reservationTime = new Date(`${cleaned_reservation_date}T${reservation_time}:00`).valueOf()
+
+  if (reservationTime > currentTime){
+    return next()
+  }
+  next({
+    status: 400, message: "Reservations cannot be made, reservations need to be made in the future."
+  })
+}
+
+function isReservationDuringHours(req, res, next){
+  const time = req.body.data.reservation_time
+  const timeConversion = time.replace(":", "")
+  console.log(timeConversion)
+  console.log(timeConversion>1030)
+  if (timeConversion >= 1030 && timeConversion <= 2130){
+    return next()
+  }
+  next({
+    status: 400, message: "Reservation needs to be between the times 10:30 AM and 9:30PM."
+  })
+}
+
 async function list(req, res) {
   const { date } = req.query;
 
   if (date) {
     const data = await service.listForDate(date);
-    /* console.log(data); */
     res.json({ data });
   }
   else{
 
   const data = await service.list();
-  /* console.log(data); */
   res.json({ data });
   }
 }
@@ -99,6 +134,9 @@ module.exports = {
     hasReservationDate,
     hasReservationTime,
     hasReservationPeople,
+    isReservationTuesday,
+    isReservationPast,
+    isReservationDuringHours,
     asyncErrorBoundary(create)
   ],
 };

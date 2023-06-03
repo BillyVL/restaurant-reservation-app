@@ -27,6 +27,12 @@ function CreateReservation() {
     const dateAsString = reservation.reservation_date;
 
     reservation.reservation_date = new Date(reservation.reservation_date);
+    console.log("here")
+
+    if (reservation.mobile_number.length === 10 && !reservation.mobile_number.includes("-")) {
+      reservation.mobile_number = reservation.mobile_number.replace(/^(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
+      console.log(reservation.mobile_number);
+    }
     
     createReservation(reservation, abortController.signal)
         .then((data) => {
