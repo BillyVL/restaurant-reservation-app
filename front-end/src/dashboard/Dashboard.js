@@ -11,6 +11,7 @@ import ErrorAlert from "../layout/ErrorAlert";
  */
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
+  const [tables, setTables] = useState([])
   const [reservationsError, setReservationsError] = useState(null);
 
   useEffect(loadDashboard, [date]);
@@ -22,6 +23,8 @@ function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+
+    
       
     return () => abortController.abort();
   }
@@ -34,6 +37,17 @@ function Dashboard({ date }) {
       </div>
       <ErrorAlert error={reservationsError} />
       {JSON.stringify(reservations)}
+      <table>
+        <tr>
+          <th scope="col">  Reservation ID  </th>
+          <th scope="col">  First Name</th>
+          <th scope="col">  Last Name  </th>
+          <th scope="col">  Mobile Number  </th>
+          <th scope="col">  Reservation Date  </th>
+          <th scope="col">  Reservation Time  </th>
+        </tr>
+        
+      </table>
     </main>
   );
 }
