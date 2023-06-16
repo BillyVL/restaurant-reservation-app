@@ -24,6 +24,10 @@ function CreateTable() {
     event.preventDefault();
     console.log('hello')
     const abortController = new AbortController();
+    if (table.capacity.length) {
+      const integerCapacity = Number(table.capacity);
+      table.capacity = integerCapacity;
+    } 
     createTable(table, abortController.signal)
       .then((data) => {
         history.push("/dashboard")
