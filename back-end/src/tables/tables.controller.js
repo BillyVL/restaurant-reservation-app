@@ -58,6 +58,7 @@ function hasResID(req, res, next){
 async function resIDExists(req, res, next){
   const reservation = await service.readReservation(req.body.data.reservation_id);
   if (reservation){
+    res.locals.reservation = reservation;
     return next()
   }
   next({
@@ -66,23 +67,33 @@ async function resIDExists(req, res, next){
 }
 
 function hasSufficientCap(req, res, next){
-  const {reservation, table} = res.body.data
-  console.log("looky here", reservation.people, table.capacity);
+  const {reservation, table} = res.locals
+  console.log("reservation", reservation, "table", table)
   if(reservation.people <= table.capacity){
     return next()
   }
   next({
-    status: 400, message: "this table does not suit the capacity."
+    status: 400, message: "this table does not have sufficient capacity."
   })
 }
 
-
+/* function tableOccupied(req, res, next){
+  const {table} = res.locals
+  if(!table.reservation_id){
+    return next()
+  }
+  next({
+    status: 400, message: "this table is occupied."
+  })
+}
+ */
 
 //CRUD FUNCTIONS
 
 async function tableExists(req, res, next){
   const table = await service.readTable(req.params.table_id);
   if (table){
+    res.locals.table = table;
     return next()
   }
   next({
@@ -102,7 +113,7 @@ async function read(req, res){
 }
 
 async function update(req, res){
-  const {table_id, reservation_id} = res.locals
+  const {table, reservation} = res.locals
   const data = await service.updateSeat(reservation.reservation_id, table.table_id);
   res.json({data})
   
@@ -136,15 +147,15 @@ async function list(req, res){
      read: [
       asyncErrorBoundary(tableExists),
       asyncErrorBoundary(read),
+      asyncErrorBoundary(resIDExists),
     ],
     update: [
       asyncErrorBoundary(tableExists),
       hasData,
       hasResID,
       asyncErrorBoundary(resIDExists),
-      hasCapacity,
-      isCapacityNum,
       hasSufficientCap,
+      // tableOccupied,
       asyncErrorBoundary(update),
     ],
     destroy: [

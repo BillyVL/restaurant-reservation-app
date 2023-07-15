@@ -5,7 +5,7 @@ import ErrorAlert from "../../layout/ErrorAlert";
 
 function SeatReservationForm() {
   const [error, setError] = useState(null);
-  const [tables, setTables] = useState({});
+  const [tables, setTables] = useState([]);
   const [tableData, setTableData] = useState({
     table_id: "",
     reservation_id: "",
@@ -16,17 +16,19 @@ function SeatReservationForm() {
 
   useEffect(() => {
       const abortController = new AbortController()
-      listTables()
+      listTables(abortController.signal)
         .then(setTables)
         .catch(setError)
+      console.log("seat table", tables)
       return () => abortController.abort();
   }, [])
 
-  const handleSubmit = async (event) => {
+  function handleSubmit(event) {
     event.preventDefault();
     const abortController = new AbortController();
     
     seatReservation(tableData.table_id, reservation_id)
+    .then(() => history.push("/"))
     return () => abortController.abort();
 
   };
@@ -44,8 +46,8 @@ function SeatReservationForm() {
   }
 
   const tableOptions = tables.map((table) => (
-    <option value = {table.table_id} key = {table.table_id}>
-        {table.table_name - table.capacity}
+    <option value={table.table_id} key={table.table_id}>
+        {table.table_name} - {table.capacity}
     </option>
   ))
 

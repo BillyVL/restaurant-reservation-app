@@ -102,6 +102,20 @@ function isReservationDuringHours(req, res, next){
   })
 }
 
+async function reservationExists(req, res, next){
+  const {reservation_id} = req.params
+  const reservation = await service.read(reservation_id)
+  if(reservation){
+    res.locals.reservation = reservation
+    return next()
+  }
+  next({
+    status: 404, message: `this reservation_id ${reservation_id} does not exist.`
+  })
+}
+
+//CRUD
+
 async function list(req, res) {
   const { date } = req.query;
 
@@ -124,6 +138,17 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function read(req, res){
+  const data = res.locals.reservation;
+  res.json({data})
+}
+
+async function updateReservation(req, res) {
+  const reservation = req.body.data;
+  const data = await service.updateReservation(reservation);
+  res.status(200).json({ data });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -139,6 +164,23 @@ module.exports = {
     isReservationDuringHours,
     asyncErrorBoundary(create)
   ],
+  read: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(read)
+  ],
+  updateReservation: [
+    hasFirstName,
+    hasLastName,
+    hasMobileNumber,
+    hasReservationDate,
+    hasReservationTime,
+    hasReservationPeople,
+    isReservationTuesday,
+    isReservationPast,
+    isReservationDuringHours,
+    asyncErrorBoundary(updateReservation)
+
+  ]
 };
 
 /*   {

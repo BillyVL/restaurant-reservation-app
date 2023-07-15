@@ -10,6 +10,7 @@ exports.up = function(knex) {
               .references("reservation_id")
               .inTable("reservations");
             table.timestamps(true, true);
+            table.string("table_status")
     });
 }
 

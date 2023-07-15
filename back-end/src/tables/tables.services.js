@@ -30,7 +30,7 @@ function readReservation(reservation_id) {
 
 // function to 
 
- async function updateSeat(){
+ async function updateSeat(reservation_id, table_id){
     const trx = await knex.transaction();
     let updatedTable = {};
     return trx("reservations")
@@ -47,7 +47,7 @@ function readReservation(reservation_id) {
         .catch(trx.rollback);
   }
 
-async function destroyTable(){
+async function destroyTable(reservation_id, table_id){
     const trx = await knex.transaction();
     let updatedTable = {};
     return trx("reservations")
