@@ -96,9 +96,15 @@ export async function listTables(signal){
   return await fetchJson(url, { headers, signal }, []);
 }
 
-export async function deleteTableAssignment(tableId) {
+export async function deleteTableAssignment(tableId, signal) {
   const url = `${API_BASE_URL}/tables/${tableId}/seat`;
-  return await fetchJson(url, { method: "DELETE", headers }, {});
+  const options = {
+    method: "DELETE",
+    headers,
+    body: JSON.stringify({ data: { tableId }}),
+    signal,
+  };
+  return await fetchJson(url, options);
 }
 
 export async function seatReservation(table_id, reservation_id, signal) {

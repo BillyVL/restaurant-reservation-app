@@ -77,7 +77,7 @@ function hasSufficientCap(req, res, next){
   })
 }
 
-/* function tableOccupied(req, res, next){
+ function tableOccupied(req, res, next){
   const {table} = res.locals
   if(!table.reservation_id){
     return next()
@@ -86,7 +86,7 @@ function hasSufficientCap(req, res, next){
     status: 400, message: "this table is occupied."
   })
 }
- */
+
 
 //CRUD FUNCTIONS
 
@@ -155,11 +155,13 @@ async function list(req, res){
       hasResID,
       asyncErrorBoundary(resIDExists),
       hasSufficientCap,
-      // tableOccupied,
+      tableOccupied,
       asyncErrorBoundary(update),
     ],
     destroy: [
       asyncErrorBoundary(tableExists),
+      tableOccupied,
       asyncErrorBoundary(destroy),
+
     ], 
   };

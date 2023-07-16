@@ -3,8 +3,8 @@ import { useHistory } from "react-router"
 import ErrorAlert from "../../layout/ErrorAlert"
 import {listTables, deleteTableAssignment, } from "../../utils/api"
 
-function TableInformation( {tables} ){
-    const [currTable, setCurrTable] = useState(tables)
+function TableInformation(){
+    const [currTable, setCurrTable] = useState()
     const [error, setError] = useState(null)
 
     useEffect(loadTables, [])
@@ -13,9 +13,9 @@ function TableInformation( {tables} ){
         const abortController = new AbortController();
         setError(null)
         try{
-        await listTables(abortController.signal)
+        const newTables = await listTables(abortController.signal)
         /* todo: set current table */
-        setCurrTable(tables)
+        setCurrTable(newTables)
 
         console.log(await listTables(abortController.signal))
         }
@@ -26,7 +26,7 @@ function TableInformation( {tables} ){
         return () => abortController.abort()
     }
 
-    const allTables = tables?.map((table) => {
+    const allTables = currTable?.map((table) => {
         console.log(table);
         let tableStatus = "Free"
         if (table.reservation_id){
@@ -63,7 +63,7 @@ function TableInformation( {tables} ){
 
     async function handleFinish(table){
         if(window.confirm("Is this table ready to seat new guests? This cannot be undone.")){
-            await deleteTableAssignment(table.table_id)
+            await deleteTableAssignment(table)
             loadTables()
         }
     }
