@@ -26,8 +26,9 @@ function SeatReservationForm() {
   function handleSubmit(event) {
     event.preventDefault();
     const abortController = new AbortController();
-    
+    console.log("yoyoyo", tableData)
     seatReservation(tableData.table_id, reservation_id)
+    
     .then(() => history.push("/"))
     return () => abortController.abort();
 
