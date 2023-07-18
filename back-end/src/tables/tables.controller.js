@@ -77,13 +77,35 @@ function hasSufficientCap(req, res, next){
   })
 }
 
- function tableOccupied(req, res, next){
+/* function tableOccupied(req, res, next){
+  const {table} = res.locals
+  if(table.reservation_id === null){
+    console.log("hey", table)
+    return next({
+      status: 400, message: "this table is not occupied."
+    })
+  }
+  next()
+  
+} */
+ function tableNotOccupied(req, res, next){
   const {table} = res.locals
   if(!table.reservation_id){
     return next()
   }
   next({
     status: 400, message: "this table is occupied."
+  })
+} 
+
+function tableOccupied(req, res, next) {
+  const table = res.locals.table;
+  if (table.reservation_id) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "table_id is not occupied",
   })
 }
 
@@ -97,7 +119,7 @@ async function tableExists(req, res, next){
     return next()
   }
   next({
-    status: 404, message: "this table does not exists."
+    status: 404, message: `${req.params.table_id} does not exists`
   })
 }
 
@@ -121,7 +143,7 @@ async function update(req, res){
 
 async function destroy(req, res) {
   const table = res.locals.table;
-  const data = await service.destroyTable(table.table_id, table.reservation_id);
+  const data = await service.destroyTable(table.reservation_id, table.table_id);
   res.json({data});
 }
 
@@ -155,7 +177,7 @@ async function list(req, res){
       hasResID,
       asyncErrorBoundary(resIDExists),
       hasSufficientCap,
-      tableOccupied,
+      tableNotOccupied,
       asyncErrorBoundary(update),
     ],
     destroy: [

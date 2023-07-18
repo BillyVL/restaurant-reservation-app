@@ -12,22 +12,14 @@ function TableInformation(){
     async function loadTables(){
         const abortController = new AbortController();
         setError(null)
-        try{
-        const newTables = await listTables(abortController.signal)
-        /* todo: set current table */
-        setCurrTable(newTables)
-
-        console.log(await listTables(abortController.signal))
-        }
-        catch(error){
-            console.log(error);
-            setError(error)
-        }
+        await listTables(abortController.signal)        
+            .then(setCurrTable)
+            .catch(setError)
         return () => abortController.abort()
     }
 
     const allTables = currTable?.map((table) => {
-        console.log(table);
+        console.log("alltables", table);
         let tableStatus = "Free"
         if (table.reservation_id){
             tableStatus = "Occupied"
@@ -35,11 +27,11 @@ function TableInformation(){
 
         return (
             <div>
-            <p data-table-id-status={`$table.table_id`}>
-                {table.table_name}
-                {tableStatus}
-                {table.capacity}
-                {table.table_id}
+            <p data-table-id-status={`${table.table_id}`}>
+                {  table.table_name  } &nbsp;
+                {  tableStatus  } &nbsp; ///
+                Capacity: {  table.capacity  } &nbsp;  
+                ID: {  table.table_id  } &nbsp; 
             </p>
             <FinishButton tableStatus={tableStatus} table={table}/>
             </div>
@@ -61,15 +53,17 @@ function TableInformation(){
         return null
     }
 
-    async function handleFinish(table){
+    async function handleFinish(tableId){
         if(window.confirm("Is this table ready to seat new guests? This cannot be undone.")){
-            await deleteTableAssignment(table)
+            console.log(tableId)
+            await deleteTableAssignment(tableId)
             loadTables()
         }
     }
 
     return (
         <main>
+            <h3>Tables @ Restaurant</h3>
             <ErrorAlert error={error}/>
             <div>{allTables}</div>
             

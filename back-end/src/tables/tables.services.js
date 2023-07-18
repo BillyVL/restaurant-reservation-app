@@ -28,8 +28,6 @@ function readReservation(reservation_id) {
         .first();
   }
 
-// function to 
-
  async function updateSeat(reservation_id, table_id){
     const trx = await knex.transaction();
     let updatedTable = {};
@@ -50,13 +48,27 @@ function readReservation(reservation_id) {
 async function destroyTable(reservation_id, table_id){
     const trx = await knex.transaction();
     let updatedTable = {};
+    return trx("reservations")
+      .where({ reservation_id })
+      .then(() =>
+        trx("tables")
+          .where({ table_id })
+          .update({ reservation_id: null }, "*")
+          .then((results) => (updatedTable = results[0]))
+      )
+      .then(trx.commit)
+      .then(() => updatedTable)
+      .catch(trx.rollback);
+/*     const trx = await knex.transaction();
+    let updatedTable = {};
     return trx("tables")
         .where({ table_id })
         .update({ reservation_id: null }, "*")
         .then((results) => (updatedTable = results[0]))
         .then(trx.commit)
         .then(() => updatedTable)
-        .catch(trx.rollback)
+        .catch(trx.rollback) */
+
      /* trx("reservations")
       .where({ reservation_id })
       .update({ status: "finished" })
