@@ -102,6 +102,17 @@ function isReservationDuringHours(req, res, next){
   })
 }
 
+function statusCheck(req, res, next){
+  const {status} = req.body.data
+  if (status !== 'booked' ){
+    next()
+  }
+  
+  return next({
+    status: 400, message: "This reservation may not have this status.",
+    })
+}
+
 async function reservationExists(req, res, next){
   const {reservation_id} = req.params
   const reservation = await service.read(reservation_id)
@@ -152,6 +163,16 @@ async function updateReservation(req, res) {
   res.status(200).json({ data });
 }
 
+async function updateStatus(req, res){
+  const { reservation } = res.locals
+  const newReservation = {
+    ...reservation,
+    status: req.body.data.status,
+  }
+  const data = await service.update(newReservation)
+  res.json({data})
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -165,6 +186,7 @@ module.exports = {
     isReservationTuesday,
     isReservationPast,
     isReservationDuringHours,
+    statusCheck,
     asyncErrorBoundary(create)
   ],
   read: [
@@ -183,6 +205,11 @@ module.exports = {
     isReservationDuringHours,
     asyncErrorBoundary(updateReservation)
 
+  ],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(updateStatus),
+    statusCheck,
   ]
 };
 

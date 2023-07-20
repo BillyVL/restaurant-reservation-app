@@ -6,6 +6,10 @@ function ReservationInformation({reservations}){
 
 const resRow = reservations.map((reservation) => {
     console.log("herehehe", reservation)
+    if(reservation.status === null){
+        reservation.status = 'booked'
+    }
+    if (reservation.status !== "finished"){
     return (
         <tr key={reservation.reservation_id}>
         <td>{reservation.reservation_id}</td>
@@ -15,13 +19,21 @@ const resRow = reservations.map((reservation) => {
         <td>{reservation.reservation_date}</td>
         <td>{reservation.reservation_time}</td>
         <td>{reservation.people}</td>
-        <td><Link to={`/reservations/${reservation.reservation_id}/seat`}>
-        <button>Seat</button>
-        </Link>
+        <td data-reservation-id-status={reservation.reservation_id}>{reservation.status}</td>
+        <td>
+            {reservation.status === 'booked' ?
+            <Link to={`/reservations/${reservation.reservation_id}/seat`}>
+            <button>Seat</button>
+            </Link>
+            :
+            <>
+            </>
+        }
+        
         </td>
 
         </tr>
-    )
+    )}
 })
 
 if (!reservations){

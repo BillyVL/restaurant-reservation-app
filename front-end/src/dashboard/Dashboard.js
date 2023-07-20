@@ -73,7 +73,7 @@ function Dashboard({ date }) {
         <button>Seat</button>
       </Link> */}
       <ReservationInformation reservations={reservations}/>
-      <TableInformation/>
+      <TableInformation loadReservation={loadReservation}/>
     </main>
   );
 }

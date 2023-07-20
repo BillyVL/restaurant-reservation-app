@@ -3,7 +3,7 @@ import { useHistory } from "react-router"
 import ErrorAlert from "../../layout/ErrorAlert"
 import {listTables, deleteTableAssignment, } from "../../utils/api"
 
-function TableInformation(){
+function TableInformation({loadReservation}){
     const [currTable, setCurrTable] = useState()
     const [error, setError] = useState(null)
 
@@ -12,6 +12,7 @@ function TableInformation(){
     async function loadTables(){
         const abortController = new AbortController();
         setError(null)
+        await loadReservation()
         await listTables(abortController.signal)        
             .then(setCurrTable)
             .catch(setError)
@@ -58,6 +59,7 @@ function TableInformation(){
             console.log(tableId)
             await deleteTableAssignment(tableId)
             loadTables()
+
         }
     }
 

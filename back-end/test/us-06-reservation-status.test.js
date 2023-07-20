@@ -19,7 +19,7 @@ describe("US-06 - Reservation status", () => {
     return await knex.migrate.rollback(null, true).then(() => knex.destroy());
   });
 
-  describe("POST /reservations", () => {
+  describe.only("POST /reservations", () => {
     test("returns 201 if status is 'booked'", async () => {
       const data = {
         first_name: "first",

@@ -5,7 +5,7 @@ import { listReservations } from "../../utils/api"
 
 function ReservationSearch(){
 
-const [reservations, setReservations] = useState(null)
+const [reservations, setReservations] = useState([])
 const [mobile_number, setMobileNumber] = useState('')    
 const [error, setError] = useState(null)
 
@@ -29,7 +29,6 @@ const resRow = reservations?.map((reservation) => {
         <td>{reservation.reservation_date}</td>
         <td>{reservation.reservation_time}</td>
         <td>{reservation.people}</td>
-
         </tr>
     )
 })
@@ -42,6 +41,7 @@ return (
         </div>
         
         <form onSubmit={handleSubmit}>
+            <div>
             <input
                 id="mobile_number"
                 name="mobile_number"
@@ -50,10 +50,15 @@ return (
                 onChange={(event) => setMobileNumber(event.target.value)}
                 value={mobile_number}
             />
+            </div>
+
+            <div>
             <button className="submit=btn" type='submit'>Find</button>
+            </div>
         </form>
+
         
-        {Object.keys(reservations).length > 0 ?
+        {reservations.length !== 0 ?
         <div>
             <h3>Found Reservations</h3>
             <table>

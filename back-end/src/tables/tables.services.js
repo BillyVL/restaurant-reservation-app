@@ -33,7 +33,7 @@ function readReservation(reservation_id) {
     let updatedTable = {};
     return trx("reservations")
         .where({ reservation_id })
-        // .update({ status: "seated" }, "*")
+        .update({ status: "seated" }, "*")
         .then(() =>
         trx("tables")
             .where({ table_id })
@@ -50,6 +50,7 @@ async function destroyTable(reservation_id, table_id){
     let updatedTable = {};
     return trx("reservations")
       .where({ reservation_id })
+      .update({ status: "finished" })
       .then(() =>
         trx("tables")
           .where({ table_id })
