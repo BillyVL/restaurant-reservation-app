@@ -18,14 +18,14 @@ function TableInformation({loadReservation}){
         return () => abortController.abort()
     }
 
-    const allTables = currTable?.map((table, index) => {
+    const allTables = currTable?.map((table) => {
         let tableStatus = "Free"
         if (table.reservation_id){
             tableStatus = "Occupied"
         }
 
         return (
-            <div key = {index}>
+            <div>
             <p data-table-id-status={`${table.table_id}`}>
                 {  table.table_name  } &nbsp;
                 {  tableStatus  } &nbsp; ///
