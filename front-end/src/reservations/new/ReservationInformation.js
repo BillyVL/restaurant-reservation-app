@@ -2,6 +2,7 @@ import React, {useState} from "react"
 import { Link } from "react-router-dom"
 import { setReservationStatus } from "../../utils/api"
 import { useHistory } from "react-router-dom";
+import ErrorAlert from "../../layout/ErrorAlert";
 
 function ReservationInformation({reservations}){
 
@@ -74,6 +75,7 @@ if (!reservations){
 
 return (
     <div>
+        <ErrorAlert error={error}/>
         <table>
             <tbody>
                 <tr>

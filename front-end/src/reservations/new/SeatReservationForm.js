@@ -27,7 +27,8 @@ function SeatReservationForm() {
     const abortController = new AbortController();
     seatReservation(tableData.table_id, reservation_id)
     
-    .then(() => history.push("/"))
+      .then(() => history.push("/"))
+      .catch(setError)
     return () => abortController.abort();
 
   };

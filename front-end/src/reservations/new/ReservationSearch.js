@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { listReservations } from "../../utils/api"
+import ErrorAlert from "../../layout/ErrorAlert"
 
 
 
@@ -28,6 +29,7 @@ const resRow = reservations?.map((reservation) => {
         <td>{reservation.reservation_date}</td>
         <td>{reservation.reservation_time}</td>
         <td>{reservation.people}</td>
+        <td>{reservation.status}</td>
         </tr>
     )
 })
@@ -35,6 +37,7 @@ const resRow = reservations?.map((reservation) => {
 return (
     
     <div>
+        <ErrorAlert error={error}/>
         <div>
             <h2>Find your reservation!</h2>
         </div>

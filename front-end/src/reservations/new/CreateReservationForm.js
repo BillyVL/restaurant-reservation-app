@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router";
 
 function CreateReservationForm({ reservation, setReservation }) {
@@ -43,7 +43,6 @@ function CreateReservationForm({ reservation, setReservation }) {
         <input
           name="mobile_number"
           type="tel"
-/*           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" */
           value={reservation.mobile_number}
           placeholder="###-###-####"
           require="true"
