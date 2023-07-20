@@ -25,7 +25,7 @@ function TableInformation({loadReservation}){
         }
 
         return (
-            <div>
+            <div key = {table.table_id}>
             <p data-table-id-status={`${table.table_id}`}>
                 {  table.table_name  } &nbsp;
                 {  tableStatus  } &nbsp; ///
