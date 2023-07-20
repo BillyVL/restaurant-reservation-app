@@ -102,15 +102,38 @@ function isReservationDuringHours(req, res, next){
   })
 }
 
+function reservationFinished(req, res, next) {
+  const {reservation} = res.locals
+  if (reservation.status === 'finished') {
+    next({
+      status: 400, message: "A finished reservation cannot be updated."
+    })  
+  }
+
+  return next();
+  
+}
+
 function statusCheck(req, res, next){
-  const {status} = req.body.data
-  if (status !== 'booked' ){
-    next()
+  const { status } = req.body.data;
+  
+
+  if (req.method === "POST" && status && status !== "booked") {
+    next({
+      status: 400,
+      message: `Reservation cannot have status of ${status}.`
+    })
   }
   
-  return next({
-    status: 400, message: "This reservation may not have this status.",
+  console.log("status", status)
+  if (req.method === "PUT" && status && status === 'unknown') {
+    
+    next({
+      status: 400, message: "Reservation is an unknown status."
     })
+  }
+
+  return next();
 }
 
 async function reservationExists(req, res, next){
@@ -210,6 +233,7 @@ module.exports = {
     asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(updateStatus),
     statusCheck,
+    reservationFinished,
   ]
 };
 

@@ -109,6 +109,19 @@ function tableOccupied(req, res, next) {
   })
 }
 
+function notSeated(req, res, next){
+
+  const { reservation, reservationId } = res.locals;
+  
+  if (reservation && reservationId && reservation.status === "seated") {
+    next({
+      status: 400,
+      message: `Reservation ${reservationId} has already been seated.`,
+    });
+  }
+  return next();
+
+}
 
 //CRUD FUNCTIONS
 
@@ -178,6 +191,7 @@ async function list(req, res){
       asyncErrorBoundary(resIDExists),
       hasSufficientCap,
       tableNotOccupied,
+      notSeated,
       asyncErrorBoundary(update),
     ],
     destroy: [
