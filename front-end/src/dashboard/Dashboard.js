@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { listReservations, listTables } from "../utils/api";
-import useQuery from "../utils/useQuery";
 import ErrorAlert from "../layout/ErrorAlert";
 import TableInformation from "../tables/new/TableInformation";
 import ReservationInformation from "../reservations/new/ReservationInformation";
@@ -21,7 +20,6 @@ function Dashboard({ date }) {
   useEffect(loadTables, [date]);
 
   function loadReservation() {
-    console.log("load reservation", reservations)
     const abortController = new AbortController();
     setReservationsError(null);
 
@@ -33,7 +31,6 @@ function Dashboard({ date }) {
   }
 
   async function loadTables(){
-    console.log("here")
     const abortController = new AbortController();
     setTablesError(null);
     try{
@@ -56,22 +53,6 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date: {date}</h4>
       </div>
       <ErrorAlert error={reservationsError} />
-      {/* {JSON.stringify(reservations)}
-      <table>
-        <tr>
-          <th scope="col">  Reservation ID  </th>
-          <th scope="col">  First Name</th>
-          <th scope="col">  Last Name  </th>
-          <th scope="col">  Mobile Number  </th>
-          <th scope="col">  Reservation Date  </th>
-          <th scope="col">  Reservation Time  </th>
-          <th scope="col">  Status  </th>
-          <th scope="col">  Seat  </th>
-        </tr>
-      </table>
-      <Link to={`/reservations/${reservations.reservation_id}/seat`}>
-        <button>Seat</button>
-      </Link> */}
       <ReservationInformation reservations={reservations}/>
       <TableInformation loadReservation={loadReservation}/>
     </main>

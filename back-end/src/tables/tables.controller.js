@@ -68,7 +68,6 @@ async function resIDExists(req, res, next){
 
 function hasSufficientCap(req, res, next){
   const {reservation, table} = res.locals
-  console.log("reservation", reservation, "table", table)
   if(reservation.people <= table.capacity){
     return next()
   }
@@ -77,17 +76,6 @@ function hasSufficientCap(req, res, next){
   })
 }
 
-/* function tableOccupied(req, res, next){
-  const {table} = res.locals
-  if(table.reservation_id === null){
-    console.log("hey", table)
-    return next({
-      status: 400, message: "this table is not occupied."
-    })
-  }
-  next()
-  
-} */
  function tableNotOccupied(req, res, next){
   const {table} = res.locals
   if(!table.reservation_id){
@@ -111,12 +99,11 @@ function tableOccupied(req, res, next) {
 
 function notSeated(req, res, next){
 
-  const { reservation, reservationId } = res.locals;
+  const { reservation } = res.locals;
   
-  if (reservation && reservationId && reservation.status === "seated") {
+  if (reservation  && reservation.status === "seated") {
     next({
-      status: 400,
-      message: `Reservation ${reservationId} has already been seated.`,
+      status: 400, message: `Reservation has already been seated.`
     });
   }
   return next();

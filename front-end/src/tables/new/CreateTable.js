@@ -22,7 +22,6 @@ function CreateTable() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('hello')
     const abortController = new AbortController();
     if (table.capacity.length) {
       const integerCapacity = Number(table.capacity);

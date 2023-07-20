@@ -7,9 +7,10 @@ function list(){
 
 function listForDate(date){
     return knex("reservations")
-        .select("*")
-        .where({reservation_date: date})
-        .orderBy("reservation_time")
+    .where({reservation_date: date})
+    .whereNot({status: "finished"})
+    .select("*")
+    .orderBy("reservation_time")
 }
 
 function search(mobile_number) {

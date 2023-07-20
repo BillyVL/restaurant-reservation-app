@@ -139,3 +139,10 @@ export async function setReservationStatus(reservation_id, status, signal) {
   };
   return await fetchJson(url, options, {});
 }
+
+export async function getReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  return await fetchJson(url, { headers, signal }, {})
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}

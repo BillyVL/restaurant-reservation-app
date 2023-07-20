@@ -64,7 +64,6 @@ function hasReservationPeople(req, res, next) {
 
 function isReservationTuesday(req, res, next){
   const date = req.body.data.reservation_date
-  //console.log(date)
   const day = new Date(date).getUTCDay()
   if (day !== 2){
     return next()
@@ -92,8 +91,6 @@ function isReservationPast(req, res, next){
 function isReservationDuringHours(req, res, next){
   const time = req.body.data.reservation_time
   const timeConversion = time.replace(":", "")
-  console.log(timeConversion)
-  console.log(timeConversion>1030)
   if (timeConversion >= 1030 && timeConversion <= 2130){
     return next()
   }
@@ -102,39 +99,7 @@ function isReservationDuringHours(req, res, next){
   })
 }
 
-function reservationFinished(req, res, next) {
-  const {reservation} = res.locals
-  if (reservation.status === 'finished') {
-    next({
-      status: 400, message: "A finished reservation cannot be updated."
-    })  
-  }
 
-  return next();
-  
-}
-
-function statusCheck(req, res, next){
-  const { status } = req.body.data;
-  
-
-  if (req.method === "POST" && status && status !== "booked") {
-    next({
-      status: 400,
-      message: `Reservation cannot have status of ${status}.`
-    })
-  }
-  
-  console.log("status", status)
-  if (req.method === "PUT" && status && status === 'unknown') {
-    
-    next({
-      status: 400, message: "Reservation is an unknown status."
-    })
-  }
-
-  return next();
-}
 
 async function reservationExists(req, res, next){
   const {reservation_id} = req.params
@@ -146,6 +111,39 @@ async function reservationExists(req, res, next){
   next({
     status: 404, message: `this reservation_id ${reservation_id} does not exist.`
   })
+}
+
+function statusCheck(req, res, next){
+  const { status } = req.body.data;
+
+  
+  if (req.method === "POST" && status && status !== "booked") {
+    next({
+      status: 400, message: `Reservation cannot have status of ${status}.`
+    })
+  }
+
+  if (req.method === "PUT" && status && status === 'unknown') {
+    
+    next({
+      status: 400, message: "Reservation is an unknown status."
+    })
+  }
+
+  return next();
+}
+
+
+function reservationFinished(req, res, next) {
+  const {reservation} = res.locals
+  if (reservation && reservation.status !== 'finished') {
+    return next()  
+  }
+
+  next({
+    status: 400, message: "A finished reservation cannot be updated."
+  });
+  
 }
 
 //CRUD
@@ -182,7 +180,7 @@ async function read(req, res){
 
 async function updateReservation(req, res) {
   const reservation = req.body.data;
-  const data = await service.updateReservation(reservation);
+  const data = await service.update(reservation);
   res.status(200).json({ data });
 }
 
@@ -217,6 +215,7 @@ module.exports = {
     asyncErrorBoundary(read)
   ],
   updateReservation: [
+    asyncErrorBoundary(reservationExists),
     hasFirstName,
     hasLastName,
     hasMobileNumber,
@@ -231,9 +230,10 @@ module.exports = {
   ],
   updateStatus: [
     asyncErrorBoundary(reservationExists),
-    asyncErrorBoundary(updateStatus),
     statusCheck,
     reservationFinished,
+    asyncErrorBoundary(updateStatus),
+    
   ]
 };
 

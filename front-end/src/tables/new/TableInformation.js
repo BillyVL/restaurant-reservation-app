@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { useHistory } from "react-router"
 import ErrorAlert from "../../layout/ErrorAlert"
 import {listTables, deleteTableAssignment, } from "../../utils/api"
 
@@ -20,7 +19,6 @@ function TableInformation({loadReservation}){
     }
 
     const allTables = currTable?.map((table) => {
-        console.log("alltables", table);
         let tableStatus = "Free"
         if (table.reservation_id){
             tableStatus = "Occupied"
@@ -56,7 +54,6 @@ function TableInformation({loadReservation}){
 
     async function handleFinish(tableId){
         if(window.confirm("Is this table ready to seat new guests? This cannot be undone.")){
-            console.log(tableId)
             await deleteTableAssignment(tableId)
             loadTables()
 

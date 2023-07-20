@@ -15,7 +15,6 @@ const handleSubmit = (event) =>{
     listReservations({mobile_number})
         .then(setReservations)
         .catch(setError)
-    console.log("these reservations", reservations)
     return () => AbortController.abort();
 }
 

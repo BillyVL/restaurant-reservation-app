@@ -8,10 +8,10 @@ const { createReservation, createTable, seatReservation } = require("./api");
 
 const baseURL = process.env.BASE_URL || "http://localhost:3000";
 
-const onPageConsole = (msg) =>
+/* const onPageConsole = (msg) =>
   Promise.all(msg.args().map((event) => event.jsonValue())).then((eventJson) =>
     console.log(`<LOG::page console ${msg.type()}>`, ...eventJson)
-  );
+  ); */
 
 describe("US-06 - Reservation status - E2E", () => {
   let page;
@@ -47,7 +47,7 @@ describe("US-06 - Reservation status - E2E", () => {
       });
 
       page = await browser.newPage();
-      page.on("console", onPageConsole);
+      /* page.on("console", onPageConsole); */
       await page.setViewport({ width: 1920, height: 1080 });
       await page.goto(`${baseURL}/dashboard?date=2035-01-01`, {
         waitUntil: "networkidle0",

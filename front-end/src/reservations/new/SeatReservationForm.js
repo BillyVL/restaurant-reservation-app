@@ -19,14 +19,12 @@ function SeatReservationForm() {
       listTables(abortController.signal)
         .then(setTables)
         .catch(setError)
-      console.log("seat table", tables)
       return () => abortController.abort();
   }, [])
 
   function handleSubmit(event) {
     event.preventDefault();
     const abortController = new AbortController();
-    console.log("yoyoyo", tableData)
     seatReservation(tableData.table_id, reservation_id)
     
     .then(() => history.push("/"))
