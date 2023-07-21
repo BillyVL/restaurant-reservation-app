@@ -76,9 +76,8 @@ function isReservationTuesday(req, res, next){
 function isReservationPast(req, res, next){
   const { reservation_date, reservation_time } = req.body.data
   const currentTime = Date.now()
-  const cleaned_reservation_date = new Date(reservation_date).toISOString().split('T')[0]
 
-  const reservationTime = new Date(`${cleaned_reservation_date}T${reservation_time}:00`).valueOf()
+  const reservationTime = new Date(`${reservation_date}${reservation_time}`).valueOf()
 
   if (reservationTime > currentTime){
     return next()
