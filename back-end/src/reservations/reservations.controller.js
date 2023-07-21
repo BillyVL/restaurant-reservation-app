@@ -78,6 +78,7 @@ function isReservationPast(req, res, next){
   const currentTime = Date.now()
 
   const reservationTime = new Date(`${reservation_date}${reservation_time}`).valueOf()
+  console.log(reservationTime, currentTime)
 
   if (reservationTime > currentTime){
     return next()
