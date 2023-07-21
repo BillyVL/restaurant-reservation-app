@@ -36,7 +36,7 @@ function EditReservation(){
         return () => abortController.abort();
       }, [reservation_id]);
 
-      function submitHandle(event) {
+      const submitHandle = async(event) => {
         event.preventDefault()
         formatReservationDate(reservation)
         formatReservationTime(reservation)
