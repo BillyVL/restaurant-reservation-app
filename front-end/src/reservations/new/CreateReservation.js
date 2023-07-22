@@ -23,6 +23,11 @@ function CreateReservation() {
     reservation.people = Number(reservation.people);
     
     const dateAsString = reservation.reservation_date;
+    const isValidMobile = /^[\d-]+$/.test(reservation.mobile_number)
+    if (!isValidMobile){
+      setError({message: 'mobile_number can only contain numbers'})
+      return;
+    }
 
     if (reservation.mobile_number.length === 10 && !reservation.mobile_number.includes("-")) {
       reservation.mobile_number = reservation.mobile_number.replace(/^(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')
